@@ -1,0 +1,139 @@
+@import url('https://fonts.googleapis.com/css2?family=Eczar:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-serif: "Eczar", Georgia, serif;
+  
+  --color-gold: #c5a059;
+  --color-gold-bright: #e8c070;
+  --color-gold-dark: #8b6d3a;
+  --color-bull: #3ddc84;
+  --color-bear: #ff4d6d;
+  --color-neu: #8892a4;
+  
+  --color-bg-terminal: #0a0b10;
+  --color-bg-1: #0e0f16;
+  --color-bg-2: #12141e;
+  --color-bg-3: #181b26;
+  --color-bg-4: #1e2230;
+}
+
+:root {
+  --gold: #c5a059;
+  --goldG: rgba(197, 160, 89, 0.08);
+  --goldBdr: rgba(197, 160, 89, 0.20);
+  --bull: #3ddc84;
+  --bear: #ff4d6d;
+  --bdr: 1px solid var(--goldBdr);
+  --fm: 'JetBrains Mono', monospace;
+  --fd: 'Eczar', serif;
+}
+
+@layer base {
+  body {
+    @apply bg-[--color-bg-terminal] text-neutral-100 antialiased selection:bg-gold/30 font-mono;
+    overflow-x: hidden;
+  }
+
+  /* CRT grain */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 0, 0, 0.022) 2px, rgba(0, 0, 0, 0.022) 4px);
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--fd);
+    @apply font-bold tracking-tight leading-tight;
+  }
+}
+
+/* ── SCAN LINE ──────────────────────────────────────── */
+.scanline {
+  position: fixed;
+  left: 0;
+  right: 0;
+  height: 2px;
+  z-index: 9997;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(197, 160, 89, 0.05), transparent);
+  animation: scan 12s linear infinite;
+}
+
+@keyframes scan {
+  from { top: -2px; }
+  to { top: 100vh; }
+}
+
+/* Custom scrollbar for dark terminal theme */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-bg-1);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-gold-dark);
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gold);
+}
+
+/* ── QUANT UTILS ────────────────────────────────────── */
+.card-quant {
+  @apply bg-bg-2 border border-white/5 rounded-xl overflow-hidden relative shadow-2xl;
+}
+
+.card-quant::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(197, 160, 89, 0.25), transparent);
+}
+
+.ch-quant {
+  @apply flex items-center justify-between px-4 py-2 border-b border-white/5 bg-bg-3;
+}
+
+.ct-quant {
+  @apply font-mono text-[10px] font-semibold uppercase tracking-[0.15em] text-neu;
+}
+
+/* ── TEMPORAL CURSOR ────────────────────────────────── */
+.tc-wrap { position: relative; overflow: hidden; }
+.tcursor {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  pointer-events: none;
+  background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+  opacity: 0;
+  transition: opacity 140ms ease;
+  z-index: 20;
+  box-shadow: 0 0 8px rgba(197, 160, 89, 0.25);
+}
+.tcursor.on { opacity: 1; }
+.ttip {
+  position: absolute;
+  top: 6px;
+  background: var(--color-bg-4);
+  border: 1px solid var(--goldBdr);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 9px;
+  color: var(--gold);
+  white-space: nowrap;
+  pointer-events: none;
+  transform: translateX(-50%);
+}
